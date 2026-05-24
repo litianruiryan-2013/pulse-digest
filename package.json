@@ -1,0 +1,10 @@
+{
+  "name": "pulse-email-digest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Free daily news digest emailer — runs on GitHub Actions, sends via Resend.",
+  "scripts": {
+    "send": "node send-digest.js"
+  }
+}
