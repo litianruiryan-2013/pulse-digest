@@ -1,0 +1,30 @@
+name: Daily News Digest
+
+# Runs automatically on a schedule + lets you trigger it manually for testing.
+on:
+  schedule:
+    # This is set to 7:00 AM Singapore time (SGT = UTC+8, so 23:00 UTC).
+    #   "0 23 * * *" → 7:00 AM Singapore (next day)  ← current
+    #   "0 22 * * *" → 6:00 AM Singapore
+    #   "0 0  * * *" → 8:00 AM Singapore
+    - cron: "0 23 * * *"
+  workflow_dispatch: {}   # adds a "Run workflow" button for manual testing
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Send the digest
+        run: node send-digest.js
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
