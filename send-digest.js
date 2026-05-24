@@ -167,6 +167,10 @@ async function main() {
   const html = renderHtml(sections);
   const subject = `📰 Your daily digest — ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
 
+  // Supports one OR multiple recipients: set TO_EMAIL to a comma-separated list,
+  // e.g. "me@example.com, friend@example.com, family@example.com"
+  const recipients = TO_EMAIL.split(",").map((e) => e.trim()).filter(Boolean);
+
   console.log("Sending email via Resend…");
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -176,7 +180,7 @@ async function main() {
     },
     body: JSON.stringify({
       from: FROM_EMAIL,
-      to: [TO_EMAIL],
+      to: recipients,
       subject,
       html,
     }),
@@ -188,7 +192,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("✅ Digest sent successfully to", TO_EMAIL);
+  console.log("✅ Digest sent successfully to", recipients.join(", "));
 }
 
 main();
